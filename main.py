@@ -13,15 +13,17 @@ OUT_DIR = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
 
 def check_gate(text):
     """Mirror the competition gate: UTF-8 text, 1-200 characters,
-    not only whitespace, exactly one line."""
+    not only whitespace, exactly one line. Each failure names the
+    gate that failed and the offending value, so a rejected entry
+    says exactly what to fix."""
     if not isinstance(text, str):
-        raise ValueError("entry must be text")
+        raise ValueError(f"type gate failed: entry must be text, got {type(text).__name__}")
     if not (1 <= len(text) <= 200):
-        raise ValueError(f"entry must be 1-200 characters, got {len(text)}")
+        raise ValueError(f"length gate failed: entry must be 1-200 characters, got {len(text)}")
     if not text.strip():
-        raise ValueError("entry must not be only whitespace")
+        raise ValueError("whitespace gate failed: entry must not be only whitespace")
     if "\n" in text or "\r" in text:
-        raise ValueError("entry must be a single line")
+        raise ValueError("single-line gate failed: entry must be exactly one line")
     text.encode("utf-8")  # raises if not valid UTF-8
     return text
 
